@@ -1,0 +1,16 @@
+services:
+  openssh-server:
+    image: linuxserver/openssh-server:latest
+    container_name: openssh-server
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - PUBLIC_KEY=ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDK6...g/P user@hostname  # ***แก้ไขตรงนี้***
+      - PASSWORD_ACCESS=false
+      - USER_NAME=customuser
+    volumes:
+      - ./config:/config  # ***แก้ไขตรงนี้*** (ใช้ ./config เป็นตัวอย่าง)
+    ports:
+      - 2222:2222
+    restart: unless-stopped
