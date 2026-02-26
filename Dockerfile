@@ -8,7 +8,7 @@ RUN mkdir /var/run/sshd
 
 # ฟังก์ชันช่วยตั้งค่า SSH Directory (เพื่อให้โค้ดดูสะอาดขึ้น)
 # สร้าง .ssh และไฟล์ authorized_keys พร้อมตั้ง Permission
-# 700 สำหรับโฟลเดอร์ .ssh และ 600 สำหรับไฟล์ authorized_keys (สำคัญมาก ถ้าไม่ตั้งแบบนี้ SSH จะไม่อนุญาตให้ใช้ Key)
+# 700 สำหรับโฟลเดอร์ .ssh และ 600 สำหรับไฟล์ authorized_keys
 
 # ===== สร้าง admin =====
 RUN useradd -m -s /bin/bash admin && \
@@ -38,11 +38,16 @@ RUN useradd -m -s /bin/bash user_b && \
     chmod 700 /home/user_b/.ssh && \
     chmod 600 /home/user_b/.ssh/authorized_keys
 
-# ===== สร้าง data และตั้ง Permission (ตามเดิมของคุณ) =====
+# ===== สร้าง data และตั้ง Permission =====
 RUN mkdir -p /data/data_a && mkdir -p /data/data_b
 RUN chown user_a:user_a /data/data_a && chmod 700 /data/data_a
 RUN chown user_b:user_b /data/data_b && chmod 700 /data/data_b
 RUN chmod 755 /data
+
+# เพิ่มส่วนนี้เข้าไปท้ายไฟล์ (ก่อน EXPOSE 22)
+RUN sed -i 's/#PubkeyAuthentication yes/PubkeyAuthentication yes/' /etc/ssh/sshd_config && \
+    sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config && \
+    echo "StrictModes no" >> /etc/ssh/sshd_config
 
 EXPOSE 22
 CMD ["/usr/sbin/sshd", "-D"]
