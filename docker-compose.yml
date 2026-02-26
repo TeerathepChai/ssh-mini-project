@@ -5,7 +5,6 @@ services:
     ports:
       - "2222:22"
     volumes:
-      # สมมติว่าคุณมีไฟล์กุญแจแยกกันในเครื่อง
       - ./key/admin_id_rsa.pub:/home/admin/.ssh/authorized_keys:ro
       - ./key/user_a_id_rsa.pub:/home/user_a/.ssh/authorized_keys:ro
       - ./key/user_b_id_rsa.pub:/home/user_b/.ssh/authorized_keys:ro
